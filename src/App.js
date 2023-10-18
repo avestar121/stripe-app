@@ -40,7 +40,7 @@ const data = [{
 
 const millisecondsSinceStartOfDay = data.map(interval => {
   const fromTime = new Date(interval.from);
-  const startOfDay = new Date(fromTime).setHours(0, 0, 0, 0);
+  const startOfDay = new Date(fromTime.toISOString()).setUTCHours(0, 0, 0, 0);
 
   return fromTime - startOfDay;
 });

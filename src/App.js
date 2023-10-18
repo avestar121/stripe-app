@@ -36,34 +36,39 @@ const data = [{
   "to": "2023-05-30T20:43:31+00:00",
 }]
 
-
+const fullDay = 24 * 60 * 60 * 1000
 
 const millisecondsSinceStartOfDay = data.map(interval => {
   const fromTime = new Date(interval.from);
   const startOfDay = new Date(fromTime.toISOString()).setUTCHours(0, 0, 0, 0);
+  const toTime = new Date(interval.to);   //<----
 
-  return fromTime - startOfDay;
+  return [fromTime - startOfDay, (toTime - fromTime) / fullDay * 100]; //<----
 });
 
-const fullDay = 24 * 60 * 60 * 1000
 let percents = [];
 
 const setCircles = () => {
   millisecondsSinceStartOfDay.forEach((time) => {
-    percents.push(time / fullDay * 100)
+    percents.push([time[0] / fullDay * 100, time[1]])  //<----
   })
   return percents
 }
 
 console.log(setCircles())
+const screenWidth = window.innerWidth;
+console.log(24 / screenWidth * 100)
+
 
 function BlueStripe() {
   return (
     <div className="blue-stripe" >
       {percents.map((interval, index) => {
-
+        let width = Math.max(24, screenWidth / 100 * interval[1]);  //<----
+        console.log(width)
         const circleStyle = {
-          'left': `${interval}%`, 
+          'left': `${interval[0]}%`, 
+          'width': `${width}px`  //<----
         };
 
         return <BlueCircle key={index} style={circleStyle} />;
